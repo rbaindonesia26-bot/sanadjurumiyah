@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator Ijazah Silsilah Sanad Kitab Al-Ajurrumiyyah - RBA</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome untuk Ikon UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- html2canvas untuk Ekspor PNG Resolusi Tinggi -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Google Fonts: Amiri, Cinzel & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --gold-dark: #8c6222;
+      --gold-mid: #c59b48;
+      --gold-light: #e5cb8d;
+      --maroon-line: #7f1d1d;
+      --cream-bg: #fffdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #e2e8f0;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-arabic {
+      font-family: 'Amiri', serif;
+    }
+
+    .font-cinzel {
+      font-family: 'Cinzel', serif;
+    }
+
+    /* Kanvas A4 Tetap 794px x 1123px (96 DPI A4 Portrait) agar proporsi selalu konsisten */
+    #certificate-sheet {
+      width: 794px;
+      height: 1123px;
+      background-color: var(--cream-bg);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      transform-origin: top left;
+      user-select: none;
+    }
+
+    /* Pola Islami Halus Latar Belakang */
+    .islamic-watermark {
+      background-image:
+        radial-gradient(circle at 25px 25px, rgba(197, 155, 72, 0.08) 2px, transparent 0),
+        radial-gradient(circle at 75px 75px, rgba(197, 155, 72, 0.08) 2px, transparent 0),
+        linear-gradient(45deg, rgba(197, 155, 72, 0.03) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(197, 155, 72, 0.03) 25%, transparent 25%);
+      background-size: 100px 100px, 100px 100px, 50px 50px, 50px 50px;
+    }
+
+    /* Bingkai Ganda Emas Klasik */
+    .outer-gold-border {
+      position: absolute;
+      inset: 16px;
+      border: 2.5px solid var(--gold-mid);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .inner-gold-border {
+      position: absolute;
+      inset: 22px;
+      border: 1px solid rgba(197, 155, 72, 0.65);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Kartus Puncak Mu'allif (Pengarang Kitab) */
+    .author-cartouche {
+      background: linear-gradient(180deg, #f3e2b3 0%, #dfc07a 50%, #cfa855 100%);
+      border: 2px solid #9a6e27;
+      border-radius: 9999px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        0 2px 6px rgba(120, 82, 24, 0.18);
+      position: relative;
+    }
+
+    .author-cartouche::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(255, 250, 235, 0.75);
+      border-radius: 9999px;
+      pointer-events: none;
+    }
+
+    /* Pill Nama Ulama Silsilah */
+    .sanad-pill {
+      background: linear-gradient(180deg, #efe0b9 0%, #dec282 100%);
+      border: 1.5px solid #a87c32;
+      border-radius: 9999px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        0 1.5px 3px rgba(100, 68, 20, 0.12);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 14px;
+      min-height: 31px;
+    }
+
+    .sanad-pill::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border: 0.75px solid rgba(255, 252, 240, 0.65);
+      border-radius: 9999px;
+      pointer-events: none;
+    }
+
+    /* Kotak Penerima Ijazah */
+    .recipient-pill {
+      background: linear-gradient(180deg, #f5e6be 0%, #e1c37d 100%);
+      border: 2px solid #9a6e27;
+      border-radius: 9999px;
+      box-shadow:
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.75),
+        0 3px 8px rgba(120, 82, 24, 0.16);
+      position: relative;
+    }
+
+    .recipient-pill::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border: 1px solid rgba(255, 252, 242, 0.75);
+      border-radius: 9999px;
+      pointer-events: none;
+    }
+
+    /* Scrollbar Halus untuk Panel Editor */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Aturan Cetak A4 Portrait */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+      html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        overflow: hidden !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #workspace-main {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      #preview-pane {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        overflow: visible !important;
+      }
+      #preview-scaler-box {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+      }
+      #certificate-sheet {
+        width: 210mm !important;
+        height: 297mm !important;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- TOP NAVBAR APLIKASI -->
+  <header class="no-print bg-slate-900 text-white px-3 sm:px-5 py-2.5 shadow-md z-30 flex flex-wrap items-center justify-between gap-2">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-300 via-yellow-300 to-sky-400 p-0.5 flex items-center justify-center shadow">
+        <div class="w-full h-full rounded-[9px] bg-gradient-to-b from-sky-600 to-blue-900 flex items-center justify-center text-white font-arabic font-bold text-lg">
+          ض
+        </div>
+      </div>
+      <div>
+        <h1 class="font-bold text-sm sm:text-base leading-tight text-amber-300">Ijazah Sanad Al-Ajurrumiyyah • RBA</h1>
+        <p class="text-[11px] text-slate-400 hidden sm:block">Rumah Bahasa Arab • Pratinjau Presisi A4 • Siap GitHub Pages</p>
+      </div>
+    </div>
+
+    <!-- Tombol Aksi Utama -->
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <button type="button" onclick="downloadAsPNG()" id="btn-download-png"
+        class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold shadow transition flex items-center gap-1.5">
+        <i class="fa-solid fa-image"></i>
+        <span>Unduh PNG</span>
+      </button>
+
+      <button type="button" onclick="printCertificate()"
+        class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 text-xs font-bold shadow transition flex items-center gap-1.5">
+        <i class="fa-solid fa-print"></i>
+        <span>Cetak / PDF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE MODE SWITCHER (Hanya Tampil di Layar < 1024px) -->
+  <div class="no-print lg:hidden bg-white border-b border-slate-200 px-3 py-2 flex items-center justify-center gap-2 sticky top-0 z-20 shadow-sm">
+    <button type="button" id="mob-btn-editor" onclick="setMobileView('editor')"
+      class="flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-sm transition flex items-center justify-center gap-1.5">
+      <i class="fa-solid fa-pen-to-square"></i> Edit Data & Sanad
+    </button>
+    <button type="button" id="mob-btn-preview" onclick="setMobileView('preview')"
+      class="flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center justify-center gap-1.5">
+      <i class="fa-solid fa-eye"></i> Lihat Pratinjau A4
+    </button>
+  </div>
+
+  <!-- WORKSPACE UTAMA (EDITOR + PRATINJAU) -->
+  <main id="workspace-main" class="flex-1 flex flex-col lg:flex-row lg:h-[calc(100vh-56px)] lg:overflow-hidden">
+
+    <!-- PANEL KIRI: EDITOR INTERAKTIF -->
+    <aside id="editor-pane" class="no-print w-full lg:w-[410px] xl:w-[440px] bg-white border-r border-slate-200 flex flex-col lg:h-full">
+
+      <!-- Tab Navigasi Form -->
+      <div class="p-2.5 border-b border-slate-200 bg-slate-50 grid grid-cols-4 gap-1 text-xs font-semibold">
+        <button type="button" onclick="switchTab('peserta')" id="tab-btn-peserta"
+          class="tab-btn py-2 px-1 rounded-lg bg-white text-amber-700 shadow-sm border border-amber-200 transition">
+          <i class="fa-solid fa-user-graduate block mb-0.5"></i> Peserta
+        </button>
+        <button type="button" onclick="switchTab('lembaga')" id="tab-btn-lembaga"
+          class="tab-btn py-2 px-1 rounded-lg text-slate-600 hover:bg-white/60 transition">
+          <i class="fa-solid fa-landmark block mb-0.5"></i> Kop & TTD
+        </button>
+        <button type="button" onclick="switchTab('sanad')" id="tab-btn-sanad"
+          class="tab-btn py-2 px-1 rounded-lg text-slate-600 hover:bg-white/60 transition">
+          <i class="fa-solid fa-sitemap block mb-0.5"></i> Sanad (17)
+        </button>
+        <button type="button" onclick="switchTab('kelola')" id="tab-btn-kelola"
+          class="tab-btn py-2 px-1 rounded-lg text-slate-600 hover:bg-white/60 transition">
+          <i class="fa-solid fa-folder-open block mb-0.5"></i> Batch/JSON
+        </button>
+      </div>
+
+      <!-- Isi Tab Scrollable -->
+      <div class="flex-1 overflow-y-auto p-3.5 space-y-4">
+
+        <!-- TAB 1: DATA PESERTA -->
+        <section id="tab-peserta" class="tab-panel space-y-3.5">
+          <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3.5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xs font-extrabold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-user-check text-amber-600"></i> Identitas Penerima Ijazah
+              </h2>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Otomatis Sinkron</span>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Penerima (Arab atau Latin)</label>
+              <input type="text" id="input-recipient-name" dir="auto"
+                value="محمد نور مسلم بن محمد واحد"
+                oninput="updateField('recipientName', this.value)"
+                placeholder="Contoh: UDIN HASAN / محمد نور مسلم بن محمد واحد"
+                class="w-full px-3 py-2 text-base font-arabic text-center font-bold border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none bg-white" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Keterangan Program / Angkatan (Opsional)</label>
+              <input type="text" id="input-recipient-sub" dir="auto"
+                value="Kitab Al-Ajurrumiyyah • Rumah Bahasa Arab"
+                oninput="updateField('recipientSub', this.value)"
+                placeholder="Kosongkan jika tidak diperlukan"
+                class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none bg-white" />
+            </div>
+
+            <!-- Foto Peserta -->
+            <div class="pt-2 border-t border-amber-200/70">
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-xs font-semibold text-slate-700">Foto Peserta (Bingkai Bulat Emas)</label>
+                <label class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 cursor-pointer">
+                  <input type="checkbox" id="chk-show-photo" checked onchange="updateField('showPhoto', this.checked)" class="rounded text-amber-600" />
+                  Tampilkan Foto
+                </label>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full border-2 border-amber-500 overflow-hidden bg-slate-100 flex-shrink-0 flex items-center justify-center">
+                  <img id="thumb-recipient-photo" src="" alt="Preview" class="w-full h-full object-cover hidden" />
+                  <i id="thumb-recipient-icon" class="fa-solid fa-user text-slate-400"></i>
+                </div>
+                <div class="flex-1 space-y-1.5">
+                  <div class="flex gap-1.5">
+                    <label class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-amber-600 hover:bg-amber-700 text-white cursor-pointer transition">
+                      <i class="fa-solid fa-camera mr-1"></i> Unggah Foto
+                      <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'recipientPhoto')" />
+                    </label>
+                    <button type="button" onclick="clearImage('recipientPhoto')" class="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700">
+                      Hapus
+                    </button>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <span class="text-[10px] text-slate-500 block">Zoom Foto</span>
+                      <input type="range" min="100" max="200" value="100" oninput="updatePhotoTransform('photoScale', this.value)" class="w-full accent-amber-600 h-1.5" />
+                    </div>
+                    <div>
+                      <span class="text-[10px] text-slate-500 block">Posisi Atas/Bawah</span>
+                      <input type="range" min="0" max="100" value="25" oninput="updatePhotoTransform('photoPosY', this.value)" class="w-full accent-amber-600 h-1.5" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tempat & Tanggal Penerbitan -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+            <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-calendar-days text-amber-600"></i> Keterangan Tempat & Tanggal (Kanan Bawah)
+            </h3>
+            <textarea id="input-issue-date" rows="4" dir="rtl"
+              oninput="updateField('issueDateText', this.value)"
+              class="w-full px-3 py-2 text-sm font-arabic leading-relaxed border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none bg-white">حررت هذه الإجازة في
+بميكاسان، إندونيسيا
+بتاريخ: ١٣ من جمادى الأولى ١٤٤٨ هـ
+الموافق: ٢٨ من أكتوبر ٢٠٢٦ م</textarea>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="setIssuePreset('pamekasan')" class="text-[11px] px-2.5 py-1 rounded bg-white border border-slate-300 hover:bg-amber-50 font-medium">Pamekasan</button>
+              <button type="button" onclick="setIssuePreset('makassar')" class="text-[11px] px-2.5 py-1 rounded bg-white border border-slate-300 hover:bg-amber-50 font-medium">Makassar (RBA)</button>
+              <button type="button" onclick="setIssuePreset('jambi')" class="text-[11px] px-2.5 py-1 rounded bg-white border border-slate-300 hover:bg-amber-50 font-medium">Jambi</button>
+            </div>
+          </div>
+
+          <!-- Tombol cepat lihat pratinjau di mobile -->
+          <button type="button" onclick="setMobileView('preview')" class="lg:hidden w-full py-2.5 rounded-xl bg-slate-900 text-amber-300 font-bold text-xs shadow flex items-center justify-center gap-2">
+            <i class="fa-solid fa-eye"></i> Lihat Hasil di Pratinjau A4
+          </button>
+        </section>
+
+        <!-- TAB 2: KOP RBA & TANDA TANGAN -->
+        <section id="tab-lembaga" class="tab-panel hidden space-y-3.5">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-800">Kop Rumah Bahasa Arab (RBA)</h2>
+              <button type="button" onclick="applyPresetRBA()" class="text-[11px] text-amber-700 font-bold hover:underline">Reset Kop RBA</button>
+            </div>
+
+            <div class="flex items-center gap-3 bg-white p-2.5 rounded-lg border border-slate-200">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-300 via-yellow-200 to-sky-400 p-0.5 flex items-center justify-center flex-shrink-0">
+                <div class="w-full h-full rounded-[9px] bg-gradient-to-b from-sky-600 to-blue-900 flex items-center justify-center text-white font-arabic font-bold text-lg">ض</div>
+              </div>
+              <div class="flex-1">
+                <p class="text-xs font-bold text-slate-800">Logo RBA (Bawaan / Kustom)</p>
+                <div class="flex gap-2 mt-1">
+                  <label class="px-2 py-1 text-[11px] font-semibold bg-slate-800 text-white rounded cursor-pointer hover:bg-slate-700">
+                    Unggah PNG/SVG
+                    <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'logoRBA')" />
+                  </label>
+                  <button type="button" onclick="clearImage('logoRBA')" class="px-2 py-1 text-[11px] bg-slate-200 rounded text-slate-700">Bawaan</button>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Lembaga (Kop Utama)</label>
+              <input type="text" id="input-org-main" value="RUMAH BAHASA ARAB"
+                oninput="updateField('orgMain', this.value)"
+                class="w-full px-3 py-1.5 text-xs font-extrabold border border-slate-300 rounded-lg bg-white" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Subjudul Lembaga</label>
+              <input type="text" id="input-org-sub" value="PLATFORM BELAJAR INTERAKTIF"
+                oninput="updateField('orgSub', this.value)"
+                class="w-full px-3 py-1.5 text-xs font-semibold border border-slate-300 rounded-lg bg-white" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Silsilah (Arab)</label>
+              <input type="text" id="input-title-arabic" dir="rtl" value="سلسلة السند في كتاب الآجرومية"
+                oninput="updateField('titleArabic', this.value)"
+                class="w-full px-3 py-1.5 text-base font-arabic font-bold border border-slate-300 rounded-lg bg-white" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Silsilah (Latin)</label>
+              <input type="text" id="input-title-latin" value="SILSILAH SANAD KITAB AL-AJURRUMIYYAH"
+                oninput="updateField('titleLatin', this.value)"
+                class="w-full px-3 py-1.5 text-xs font-bold border border-slate-300 rounded-lg bg-white" />
+            </div>
+          </div>
+
+          <!-- Pengaturan Tanda Tangan & Stempel -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+              <span class="text-xs font-bold text-amber-950">Tampilkan Kolom Pengesahan Ke-3 (Kanan)</span>
+              <input type="checkbox" id="chk-show-third-sig" checked onchange="updateField('showThirdSig', this.checked)" class="w-4 h-4 rounded text-amber-600" />
+            </div>
+
+            <!-- Kolom Kiri -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+              <span class="text-[11px] font-bold uppercase text-amber-700">1. Kolom Kiri (Direktur Utama RBA)</span>
+              <input type="text" dir="auto" id="input-sig-left-title" value="Direktur Utama • مدير المؤسسة"
+                oninput="updateField('sigLeftTitle', this.value)"
+                class="w-full px-2.5 py-1.5 text-xs font-bold border border-slate-300 rounded-lg bg-white" />
+              <input type="text" dir="auto" id="input-sig-left-name" value="Pimpinan Rumah Bahasa Arab"
+                oninput="updateField('sigLeftName', this.value)"
+                class="w-full px-2.5 py-1.5 text-xs font-semibold border border-slate-300 rounded-lg bg-white" />
+              <div class="flex flex-wrap gap-1.5">
+                <label class="px-2 py-1 text-[11px] font-semibold bg-slate-800 text-white rounded cursor-pointer">
+                  + TTD
+                  <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'sigLeftImg')" />
+                </label>
+                <label class="px-2 py-1 text-[11px] font-semibold bg-indigo-700 text-white rounded cursor-pointer">
+                  + Stempel
+                  <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'stampLeftImg')" />
+                </label>
+                <button type="button" onclick="clearSigImages('Left')" class="px-2 py-1 text-[11px] text-rose-600 hover:underline">Reset</button>
+              </div>
+            </div>
+
+            <!-- Kolom Tengah -->
+            <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 space-y-2">
+              <span class="text-[11px] font-bold uppercase text-amber-800">2. Kolom Tengah (Al-Mujiz / Pemberi Sanad)</span>
+              <input type="text" dir="rtl" id="input-sig-center-title" value="المجيز"
+                oninput="updateField('sigCenterTitle', this.value)"
+                class="w-full px-2.5 py-1.5 text-sm font-arabic font-bold border border-amber-300 rounded-lg bg-white" />
+              <input type="text" dir="rtl" id="input-sig-center-name" value="الشيخ الدكتور غمدان بن أحمد بن رزق اليمني"
+                oninput="updateField('sigCenterName', this.value)"
+                class="w-full px-2.5 py-1.5 text-sm font-arabic border border-amber-300 rounded-lg bg-white" />
+              <div class="flex flex-wrap gap-1.5">
+                <label class="px-2 py-1 text-[11px] font-semibold bg-slate-800 text-white rounded cursor-pointer">
+                  + TTD
+                  <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'sigCenterImg')" />
+                </label>
+                <label class="px-2 py-1 text-[11px] font-semibold bg-purple-700 text-white rounded cursor-pointer">
+                  + Stempel
+                  <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'stampCenterImg')" />
+                </label>
+                <button type="button" onclick="clearSigImages('Center')" class="px-2 py-1 text-[11px] text-rose-600 hover:underline">Reset</button>
+              </div>
+            </div>
+
+            <!-- Kolom Kanan -->
+            <div id="panel-sig-right" class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+              <span class="text-[11px] font-bold uppercase text-amber-700">3. Kolom Kanan (Koordinator Akademik RBA)</span>
+              <input type="text" dir="auto" id="input-sig-right-title" value="Koordinator Akademik RBA"
+                oninput="updateField('sigRightTitle', this.value)"
+                class="w-full px-2.5 py-1.5 text-xs font-bold border border-slate-300 rounded-lg bg-white" />
+              <input type="text" dir="auto" id="input-sig-right-name" value="Admin Akademik RBA"
+                oninput="updateField('sigRightName', this.value)"
+                class="w-full px-2.5 py-1.5 text-xs font-semibold border border-slate-300 rounded-lg bg-white" />
+              <div class="flex flex-wrap gap-1.5">
+                <label class="px-2 py-1 text-[11px] font-semibold bg-slate-800 text-white rounded cursor-pointer">
+                  + TTD
+                  <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'sigRightImg')" />
+                </label>
+                <label class="px-2 py-1 text-[11px] font-semibold bg-amber-700 text-white rounded cursor-pointer">
+                  + Stempel
+                  <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'stampRightImg')" />
+                </label>
+                <button type="button" onclick="clearSigImages('Right')" class="px-2 py-1 text-[11px] text-rose-600 hover:underline">Reset</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: MATA RANTAI SANAD (17 ULAMA) -->
+        <section id="tab-sanad" class="tab-panel hidden space-y-3.5">
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-1.5">
+            <label class="block text-xs font-bold text-amber-950">1. Mu'allif Kitab (Puncak Pohon Sanad)</label>
+            <input type="text" id="input-author-name" dir="rtl"
+              value="الشيخ النحوي أبو عبد الله محمد بن محمد بن داود الصنهاجي"
+              oninput="updateField('authorName', this.value)"
+              class="w-full px-3 py-2 text-sm font-arabic font-bold border border-amber-300 rounded-lg bg-white" />
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-slate-800">2. Kolom Kanan (Urutan 1–8 dari Mu'allif)</h3>
+              <button type="button" onclick="addSanadItem('right')" class="px-2 py-0.5 text-[11px] font-semibold bg-emerald-600 text-white rounded hover:bg-emerald-700">+ Tambah</button>
+            </div>
+            <div id="editor-right-chain" class="space-y-1.5"></div>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-slate-800">3. Kolom Kiri (Urutan 9–16 hingga Mujiz)</h3>
+              <button type="button" onclick="addSanadItem('left')" class="px-2 py-0.5 text-[11px] font-semibold bg-emerald-600 text-white rounded hover:bg-emerald-700">+ Tambah</button>
+            </div>
+            <div id="editor-left-chain" class="space-y-1.5"></div>
+          </div>
+        </section>
+
+        <!-- TAB 4: KELOLA BATCH & JSON -->
+        <section id="tab-kelola" class="tab-panel hidden space-y-3.5">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-slate-800">
+                <i class="fa-solid fa-users text-indigo-600 mr-1"></i> Antrean Peserta (<span id="batch-count">1</span>)
+              </h3>
+              <button type="button" onclick="addCurrentToBatch()" class="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white">
+                + Simpan Aktif
+              </button>
+            </div>
+            <p class="text-[11px] text-slate-500">Klik nama peserta di daftar untuk langsung memuat sertifikatnya.</p>
+            <div id="batch-list" class="max-h-52 overflow-y-auto space-y-1.5"></div>
+          </div>
+
+          <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3.5 space-y-2.5">
+            <h3 class="text-xs font-bold text-amber-950">Cadangkan / Muat Data JSON</h3>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="exportBatchJSON()" class="px-3 py-2 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-file-export"></i> Simpan JSON
+              </button>
+              <label class="px-3 py-2 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center gap-1.5 cursor-pointer">
+                <i class="fa-solid fa-file-import"></i> Muat JSON
+                <input type="file" accept=".json" class="hidden" onchange="importBatchJSON(event)" />
+              </label>
+            </div>
+            <button type="button" onclick="resetAllToDefault()" class="w-full py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 rounded-lg border border-rose-200">
+              <i class="fa-solid fa-rotate-left mr-1"></i> Reset Semua ke Bawaan RBA
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </aside>
+
+    <!-- PANEL KANAN: AREA PRATINJAU A4 RESPONSIF -->
+    <section id="preview-pane" class="hidden lg:flex flex-1 flex-col bg-slate-300/80 lg:h-full overflow-hidden">
+
+      <!-- Toolbar Zoom Pratinjau -->
+      <div class="no-print bg-slate-200/95 border-b border-slate-300 px-3 py-2 flex items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-1.5 text-slate-700 font-semibold">
+          <i class="fa-solid fa-file-lines text-amber-700"></i>
+          <span>Pratinjau Kertas A4 (210 × 297 mm)</span>
+        </div>
+
+        <div class="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-300 shadow-sm">
+          <button type="button" onclick="setZoomMode('fit')" id="zoom-btn-fit"
+            class="px-2.5 py-1 rounded text-[11px] font-bold bg-amber-600 text-white transition">
+            Auto Fit
+          </button>
+          <button type="button" onclick="setZoomMode(0.75)" id="zoom-btn-75"
+            class="px-2.5 py-1 rounded text-[11px] font-semibold text-slate-700 hover:bg-slate-100 transition">
+            75%
+          </button>
+          <button type="button" onclick="setZoomMode(1)" id="zoom-btn-100"
+            class="px-2.5 py-1 rounded text-[11px] font-semibold text-slate-700 hover:bg-slate-100 transition">
+            100%
+          </button>
+          <span id="zoom-indicator" class="px-2 text-[11px] font-mono text-slate-500 border-l border-slate-200">100%</span>
+        </div>
+      </div>
+
+      <!-- Kontainer Scroll Pratinjau -->
+      <div id="preview-scroll-container" class="flex-1 overflow-auto p-3 sm:p-5 flex justify-center items-start">
+        <!-- Wrapper dengan dimensi yang dihitung dinamis sesuai skala CSS agar tidak meluap atau terpotong -->
+        <div id="preview-scaler-box" class="relative shadow-2xl bg-white transition-all duration-150">
+
+          <!-- LEMBAR SERTIFIKAT A4 (794px x 1123px) -->
+          <div id="certificate-sheet" class="islamic-watermark flex flex-col justify-between px-[36px] py-[28px]">
+
+            <!-- Bingkai Emas Luar & Dalam -->
+            <div class="outer-gold-border"></div>
+            <div class="inner-gold-border"></div>
+
+            <!-- Ornamen Sudut Emas SVG (4 Sudut Presisi) -->
+            <svg class="absolute top-[14px] left-[14px] w-[42px] h-[42px] text-[#b88a3b] z-10 pointer-events-none" viewBox="0 0 60 60">
+              <path d="M2 58 V14 Q2 2 14 2 H58" fill="none" stroke="currentColor" stroke-width="3"/>
+              <path d="M9 52 V18 Q9 9 18 9 H52" fill="none" stroke="currentColor" stroke-width="1.3"/>
+              <circle cx="15" cy="15" r="3.5" fill="currentColor"/>
+            </svg>
+            <svg class="absolute top-[14px] right-[14px] w-[42px] h-[42px] text-[#b88a3b] z-10 pointer-events-none" viewBox="0 0 60 60">
+              <path d="M58 58 V14 Q58 2 46 2 H2" fill="none" stroke="currentColor" stroke-width="3"/>
+              <path d="M51 52 V18 Q51 9 42 9 H8" fill="none" stroke="currentColor" stroke-width="1.3"/>
+              <circle cx="45" cy="15" r="3.5" fill="currentColor"/>
+            </svg>
+            <svg class="absolute bottom-[14px] left-[14px] w-[42px] h-[42px] text-[#b88a3b] z-10 pointer-events-none" viewBox="0 0 60 60">
+              <path d="M2 2 V46 Q2 58 14 58 H58" fill="none" stroke="currentColor" stroke-width="3"/>
+              <path d="M9 8 V42 Q9 51 18 51 H52" fill="none" stroke="currentColor" stroke-width="1.3"/>
+              <circle cx="15" cy="45" r="3.5" fill="currentColor"/>
+            </svg>
+            <svg class="absolute bottom-[14px] right-[14px] w-[42px] h-[42px] text-[#b88a3b] z-10 pointer-events-none" viewBox="0 0 60 60">
+              <path d="M58 2 V46 Q58 58 46 58 H2" fill="none" stroke="currentColor" stroke-width="3"/>
+              <path d="M51 8 V42 Q51 51 42 51 H8" fill="none" stroke="currentColor" stroke-width="1.3"/>
+              <circle cx="45" cy="45" r="3.5" fill="currentColor"/>
+            </svg>
+
+            <!-- 1. HEADER KOP RESMI RUMAH BAHASA ARAB (RBA) -->
+            <header class="relative z-10 flex flex-col items-center pt-1">
+              <div class="flex items-center justify-center gap-3.5">
+                <!-- Ikon Logo RBA -->
+                <div class="w-[50px] h-[50px] flex items-center justify-center flex-shrink-0">
+                  <img id="cert-logo-rba-img" src="" alt="Logo RBA" class="w-full h-full object-contain rounded-xl hidden" />
+                  <div id="cert-logo-rba-default" class="w-full h-full rounded-[12px] bg-gradient-to-br from-[#fde047] via-[#facc15] to-[#38bdf8] p-[3.5px] shadow-sm flex items-center justify-center">
+                    <div class="w-full h-full rounded-[9px] bg-gradient-to-b from-[#0284c7] via-[#0369a1] to-[#1e3a8a] flex items-center justify-center relative overflow-hidden">
+                      <div class="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-white/15"></div>
+                      <span class="font-arabic font-bold text-[22px] text-white leading-none" style="margin-top:-4px;">ض</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Teks Nama Lembaga RBA -->
+                <div class="text-left">
+                  <h1 id="cert-org-main" class="text-[21px] font-extrabold tracking-[0.04em] text-[#1e293b] leading-none">
+                    RUMAH BAHASA ARAB
+                  </h1>
+                  <p id="cert-org-sub" class="text-[9.5px] font-bold tracking-[0.22em] text-[#64748b] uppercase mt-1.5">
+                    PLATFORM BELAJAR INTERAKTIF
+                  </p>
+                </div>
+              </div>
+
+              <!-- Garis Ornamen Pemisah -->
+              <div class="flex items-center justify-center gap-3 my-2 text-[#b88a3b]">
+                <span class="h-[1px] w-28 bg-gradient-to-r from-transparent to-[#b88a3b]"></span>
+                <span class="text-[11px] tracking-widest">❖ ◈ ❖</span>
+                <span class="h-[1px] w-28 bg-gradient-to-l from-transparent to-[#b88a3b]"></span>
+              </div>
+
+              <!-- Judul Silsilah Sanad -->
+              <div class="text-center">
+                <h2 id="cert-title-arabic" dir="rtl" class="font-arabic font-bold text-[22px] leading-[1.2] text-[#8c6222]">
+                  سلسلة السند في كتاب الآجرومية
+                </h2>
+                <p id="cert-title-latin" class="font-cinzel text-[13.5px] font-bold tracking-[0.12em] text-[#7d5316] uppercase mt-0.5">
+                  SILSILAH SANAD KITAB AL-AJURRUMIYYAH
+                </p>
+              </div>
+            </header>
+
+            <!-- 2. POHON SILSILAH SANAD (SVG KONEKTOR DINAMIS + KARTUS MU'ALLIF + 2 KOLOM + PESERTA) -->
+            <main id="sanad-tree-area" class="relative z-10 flex-1 flex flex-col justify-between my-2">
+
+              <!-- SVG Layer Konektor Merah Marun (Dihitung presisi dari posisi kartu aktual) -->
+              <svg id="sanad-connectors-svg" class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg"></svg>
+
+              <!-- Puncak Pohon: Mu'allif Kitab -->
+              <div class="relative z-10 flex justify-center">
+                <div id="node-author" class="author-cartouche px-8 py-2 max-w-[540px] text-center">
+                  <p id="cert-author-name" dir="rtl" class="font-arabic font-bold text-[19px] leading-[1.3] text-[#1c1917]">
+                    الشيخ النحوي أبو عبد الله محمد بن محمد بن داود الصنهاجي
+                  </p>
+                </div>
+              </div>
+
+              <!-- Grid 2 Kolom Mata Rantai Ulama (Kiri & Kanan dengan celah tengah 44px untuk jalur penghubung) -->
+              <div class="relative z-10 grid grid-cols-2 gap-x-[44px] my-auto py-2">
+                <!-- Kolom Kiri (Urutan 9-16) -->
+                <div id="cert-left-column" class="flex flex-col justify-between gap-[11px]"></div>
+
+                <!-- Kolom Kanan (Urutan 1-8) -->
+                <div id="cert-right-column" class="flex flex-col justify-between gap-[11px]"></div>
+              </div>
+
+              <!-- Baris Penerima Ijazah & Keterangan Tanggal -->
+              <div class="relative z-10 grid grid-cols-12 items-center gap-3 pt-1">
+                <!-- Foto Bulat + Kotak Nama Penerima (8 Kolom Kiri-Tengah) -->
+                <div class="col-span-8 flex items-center justify-end gap-3">
+                  <!-- Bingkai Foto Bulat -->
+                  <div id="cert-photo-frame" class="w-[54px] h-[54px] rounded-full border-[2.5px] border-[#b88a3b] shadow-md overflow-hidden bg-[#f5ebd6] flex-shrink-0 flex items-center justify-center">
+                    <img id="cert-recipient-photo" src="" alt="Foto Peserta" class="w-full h-full object-cover hidden" />
+                    <i id="cert-recipient-placeholder" class="fa-solid fa-user-tie text-[#b88a3b] text-xl"></i>
+                  </div>
+
+                  <!-- Kotak Nama Penerima -->
+                  <div id="node-recipient" class="recipient-pill flex-1 max-w-[360px] px-5 py-2 text-center">
+                    <p id="cert-recipient-name" dir="auto" class="font-arabic font-bold text-[17.5px] leading-[1.25] text-[#1c1917]">
+                      محمد نور مسلم بن محمد واحد
+                    </p>
+                    <p id="cert-recipient-sub" dir="auto" class="text-[9.5px] font-semibold text-[#6b4712] mt-0.5">
+                      Kitab Al-Ajurrumiyyah • Rumah Bahasa Arab
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Keterangan Tempat & Tanggal (4 Kolom Kanan) -->
+                <div class="col-span-4 text-right pl-1">
+                  <div id="cert-issue-date" dir="rtl" class="font-arabic text-[11.5px] leading-[1.4] text-[#292524] whitespace-pre-line font-bold">حررت هذه الإجازة في
+بميكاسان، إندونيسيا
+بتاريخ: ١٣ من جمادى الأولى ١٤٤٨ هـ
+الموافق: ٢٨ من أكتوبر ٢٠٢٦ م</div>
+                </div>
+              </div>
+
+            </main>
+
+            <!-- 3. BAGIAN PENGESAHAN BAWAH (TANDA TANGAN & STEMPEL RBA) -->
+            <footer id="cert-footer-grid" class="relative z-10 grid grid-cols-3 gap-4 pt-2 pb-1 text-center items-end border-t border-[#c59b48]/30">
+
+              <!-- Kolom Kiri: Direktur Utama RBA -->
+              <div class="flex flex-col items-center justify-between h-[112px] relative">
+                <p id="cert-sig-left-title" dir="auto" class="text-[11px] font-bold text-[#7a541d]">
+                  Direktur Utama • مدير المؤسسة
+                </p>
+                <div class="relative w-full h-[64px] flex items-center justify-center">
+                  <!-- Stempel Vektor RBA Bawaan -->
+                  <svg id="cert-stamp-left-default" viewBox="0 0 100 100" class="w-[66px] h-[66px] opacity-80 -ml-8">
+                    <circle cx="50" cy="50" r="44" fill="none" stroke="#3730a3" stroke-width="2.5"/>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#3730a3" stroke-width="1" stroke-dasharray="2 2"/>
+                    <circle cx="50" cy="50" r="23" fill="none" stroke="#3730a3" stroke-width="1.5"/>
+                    <text x="50" y="18" text-anchor="middle" fill="#3730a3" font-size="6.8" font-weight="bold">RUMAH BAHASA ARAB</text>
+                    <text x="50" y="55" text-anchor="middle" fill="#3730a3" font-size="16" font-weight="bold" font-family="Amiri">ض</text>
+                    <text x="50" y="87" text-anchor="middle" fill="#3730a3" font-size="6.2" font-weight="bold">VERIFIED SANAD</text>
+                  </svg>
+                  <img id="cert-stamp-left-img" src="" alt="Stempel Kiri" class="max-h-[70px] max-w-[90px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
+                  <img id="cert-sig-left-img" src="" alt="TTD Kiri" class="max-h-[56px] max-w-[105px] object-contain mix-blend-multiply -ml-2 hidden" />
+                </div>
+                <p id="cert-sig-left-name" dir="auto" class="text-[11.5px] font-bold text-[#1c1917] leading-tight">
+                  Pimpinan Rumah Bahasa Arab
+                </p>
+              </div>
+
+              <!-- Kolom Tengah: Al-Mujiz -->
+              <div class="flex flex-col items-center justify-between h-[112px] relative">
+                <p id="cert-sig-center-title" dir="rtl" class="font-arabic font-bold text-[14.5px] text-[#7a541d]">
+                  المجيز
+                </p>
+                <div class="relative w-full h-[64px] flex items-center justify-center">
+                  <img id="cert-stamp-center-img" src="" alt="Stempel Tengah" class="max-h-[70px] max-w-[90px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
+                  <img id="cert-sig-center-img" src="" alt="TTD Tengah" class="max-h-[56px] max-w-[115px] object-contain mix-blend-multiply -ml-2 hidden" />
+                </div>
+                <p id="cert-sig-center-name" dir="rtl" class="font-arabic font-bold text-[13px] text-[#1c1917] leading-tight">
+                  الشيخ الدكتور غمدان بن أحمد بن رزق اليمني
+                </p>
+              </div>
+
+              <!-- Kolom Kanan: Koordinator Akademik RBA + Badge Verifikasi Emas -->
+              <div id="cert-sig-right-col" class="flex flex-col items-center justify-between h-[112px] relative">
+                <p id="cert-sig-right-title" dir="auto" class="text-[11px] font-bold text-[#7a541d]">
+                  Koordinator Akademik RBA
+                </p>
+                <div class="relative w-full h-[64px] flex items-center justify-center">
+                  <!-- Badge Verifikasi Emas RBA -->
+                  <div id="cert-badge-rba-verified" class="flex flex-col items-center">
+                    <div class="w-[44px] h-[44px] rounded-full border-[2px] border-[#eab308] bg-[#fefce8] flex items-center justify-center shadow-sm">
+                      <i class="fa-solid fa-award text-[#ca8a04] text-[18px]"></i>
+                    </div>
+                    <span class="bg-[#eab308] text-white text-[7px] font-extrabold tracking-wider px-2.5 py-[1px] rounded-full -mt-1.5 shadow-sm">
+                      VERIFIED
+                    </span>
+                  </div>
+                  <img id="cert-stamp-right-img" src="" alt="Stempel Kanan" class="max-h-[70px] max-w-[90px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
+                  <img id="cert-sig-right-img" src="" alt="TTD Kanan" class="max-h-[56px] max-w-[105px] object-contain mix-blend-multiply -ml-2 hidden" />
+                </div>
+                <p id="cert-sig-right-name" dir="auto" class="text-[11.5px] font-bold text-[#1c1917] leading-tight">
+                  Admin Akademik RBA
+                </p>
+              </div>
+
+            </footer>
+
+          </div>
+          <!-- END LEMBAR SERTIFIKAT A4 -->
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NOTIFIKASI TOAST -->
+  <div id="toast-box" class="no-print fixed bottom-4 right-4 z-50 pointer-events-none opacity-0 transition-opacity duration-200">
+    <div id="toast-msg" class="bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl border border-amber-400/40"></div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // DATA BAWAAN SILSILAH SANAD KITAB AL-AJURRUMIYYAH (17 ULAMA)
+    // =========================================================================
+    const DEFAULT_RIGHT_CHAIN = [
+      "الشيخ أبو عبد الله محمد بن إبراهيم الحضرمي",
+      "الشيخ أحمد بن محمد بن سالم الجذامي",
+      "الشيخ محمد بن عبد الملك الغرناطي المالكي",
+      "الشيخ محمد بن محمد الأندلسي",
+      "الشيخ زكريا بن محمد بن أحمد الأنصاري",
+      "الشيخ محمد بن أحمد الرملي",
+      "الشيخ محمد بن أحمد البابلي",
+      "الشيخ عبد الله بن سالم البصري"
+    ];
+
+    const DEFAULT_LEFT_CHAIN = [
+      "الشيخ محمد بن إسماعيل الحسني",
+      "الشيخ عبد الله بن الإمام محمد الحسني",
+      "الشيخ محمد بن علي بن محمد العمراني",
+      "الشيخ داود بن عبد الرحمن القديمي",
+      "الشيخ محمد بن عبد الباقي الخليلي الزبيدي",
+      "الشيخ عبد الله بن زيد المعزبي",
+      "الشيخ قاسم بن إبراهيم بن حسن البحر اليمني",
+      "الشيخ غمدان أحمد الشيخ اليمني"
+    ];
+
+    const STORAGE_KEY = 'sanad_ajurrumiyyah_rba_v2';
+
+    let appState = {
+      orgMain: "RUMAH BAHASA ARAB",
+      orgSub: "PLATFORM BELAJAR INTERAKTIF",
+      titleArabic: "سلسلة السند في كتاب الآجرومية",
+      titleLatin: "SILSILAH SANAD KITAB AL-AJURRUMIYYAH",
+      authorName: "الشيخ النحوي أبو عبد الله محمد بن محمد بن داود الصنهاجي",
+      rightChain: [...DEFAULT_RIGHT_CHAIN],
+      leftChain: [...DEFAULT_LEFT_CHAIN],
+      recipientName: "محمد نور مسلم بن محمد واحد",
+      recipientSub: "Kitab Al-Ajurrumiyyah • Rumah Bahasa Arab",
+      showPhoto: true,
+      recipientPhoto: "",
+      photoScale: 100,
+      photoPosY: 25,
+      issueDateText: "حررت هذه الإجازة في\nبميكاسان، إندونيسيا\nبتاريخ: ١٣ من جمادى الأولى ١٤٤٨ هـ\nالموافق: ٢٨ من أكتوبر ٢٠٢٦ م",
+      showThirdSig: true,
+      sigLeftTitle: "Direktur Utama • مدير المؤسسة",
+      sigLeftName: "Pimpinan Rumah Bahasa Arab",
+      sigCenterTitle: "المجيز",
+      sigCenterName: "الشيخ الدكتور غمدان بن أحمد بن رزق اليمني",
+      sigRightTitle: "Koordinator Akademik RBA",
+      sigRightName: "Admin Akademik RBA",
+      logoRBA: "",
+      sigLeftImg: "",
+      stampLeftImg: "",
+      sigCenterImg: "",
+      stampCenterImg: "",
+      sigRightImg: "",
+      stampRightImg: "",
+      batchParticipants: [
+        {
+          id: Date.now(),
+          name: "محمد نور مسلم بن محمد واحد",
+          sub: "Kitab Al-Ajurrumiyyah • Rumah Bahasa Arab",
+          photo: ""
+        }
+      ]
+    };
+
+    let zoomMode = 'fit'; // 'fit' | 0.75 | 1
+    let currentScale = 1;
+
+    // =========================================================================
+    // PENSKALAAN PRATINJAU A4 RESPONSIF (ANTI TERPOTONG / ANTI BERANTAKAN)
+    // =========================================================================
+    function updatePreviewScale() {
+      const container = document.getElementById('preview-scroll-container');
+      const scalerBox = document.getElementById('preview-scaler-box');
+      const sheet = document.getElementById('certificate-sheet');
+      const indicator = document.getElementById('zoom-indicator');
+
+      if (!container || !scalerBox || !sheet) return;
+
+      const baseWidth = 794;
+      const baseHeight = 1123;
+      const availableWidth = container.clientWidth - 28; // padding kiri kanan
+
+      if (availableWidth <= 0) return; // saat tersembunyi di tab mobile
+
+      if (zoomMode === 'fit') {
+        currentScale = Math.min(availableWidth / baseWidth, 1);
+      } else {
+        currentScale = Number(zoomMode);
+      }
+
+      // Terapkan skala CSS pada lembar A4 dan sesuaikan dimensi wrapper box persis
+      sheet.style.transform = `scale(${currentScale})`;
+      scalerBox.style.width = `${Math.round(baseWidth * currentScale)}px`;
+      scalerBox.style.height = `${Math.round(baseHeight * currentScale)}px`;
+
+      if (indicator) {
+        indicator.textContent = `${Math.round(currentScale * 100)}%`;
+      }
+
+      // Gambar ulang konektor SVG setelah ukuran stabil
+      requestAnimationFrame(drawSanadConnectors);
+    }
+
+    function setZoomMode(mode) {
+      zoomMode = mode;
+      ['fit', '75', '100'].forEach(k => {
+        const btn = document.getElementById(`zoom-btn-${k}`);
+        if (!btn) return;
+        const active = (k === 'fit' && mode === 'fit') || (k === '75' && mode === 0.75) || (k === '100' && mode === 1);
+        btn.className = active
+          ? "px-2.5 py-1 rounded text-[11px] font-bold bg-amber-600 text-white transition"
+          : "px-2.5 py-1 rounded text-[11px] font-semibold text-slate-700 hover:bg-slate-100 transition";
+      });
+      updatePreviewScale();
+    }
+
+    // =========================================================================
+    // KONEKTOR SVG POHON SILSILAH SANAD (DIHITUNG DARI KOORDINAT AKTUAL KARTU)
+    // =========================================================================
+    function getRelativeBox(el, container) {
+      // Gunakan offsetLeft/offsetTop berantai agar tidak terpengaruh oleh CSS transform: scale()
+      let x = 0;
+      let y = 0;
+      let curr = el;
+      while (curr && curr !== container) {
+        x += curr.offsetLeft;
+        y += curr.offsetTop;
+        curr = curr.offsetParent;
+      }
+      return {
+        left: x,
+        top: y,
+        width: el.offsetWidth,
+        height: el.offsetHeight,
+        centerX: x + el.offsetWidth / 2,
+        bottom: y + el.offsetHeight
+      };
+    }
+
+    function drawSanadConnectors(targetTreeArea = null) {
+      const treeArea = targetTreeArea || document.getElementById('sanad-tree-area');
+      if (!treeArea) return;
+
+      const svg = treeArea.querySelector('#sanad-connectors-svg');
+      const authorEl = treeArea.querySelector('#node-author');
+      const recipientEl = treeArea.querySelector('#node-recipient');
+      const rightNodes = treeArea.querySelectorAll('#cert-right-column .sanad-pill');
+      const leftNodes = treeArea.querySelectorAll('#cert-left-column .sanad-pill');
+
+      if (!svg || !authorEl || !recipientEl) return;
+
+      const paths = [];
+      const strokeColor = "#7f1d1d";
+      const strokeW = "2.5";
+
+      // 1. Jalur dari Mu'allif (Tengah Atas) ke Ulama Pertama di Kolom Kanan
+      if (rightNodes.length > 0) {
+        const aBox = getRelativeBox(authorEl, treeArea);
+        const rFirst = getRelativeBox(rightNodes[0], treeArea);
+        const startX = aBox.centerX + 55;
+        const startY = aBox.bottom;
+        const endX = rFirst.centerX;
+        const endY = rFirst.top;
+        const midY = startY + (endY - startY) / 2;
+
+        paths.push(`<path d="M ${startX} ${startY} V ${midY} H ${endX} V ${endY}" fill="none" stroke="${strokeColor}" stroke-width="${strokeW}" stroke-linecap="round" stroke-linejoin="round" />`);
+      }
+
+      // 2. Jalur Vertikal Antar Ulama di Kolom Kanan
+      for (let i = 0; i < rightNodes.length - 1; i++) {
+        const curr = getRelativeBox(rightNodes[i], treeArea);
+        const next = getRelativeBox(rightNodes[i + 1], treeArea);
+        paths.push(`<line x1="${curr.centerX}" y1="${curr.bottom}" x2="${next.centerX}" y2="${next.top}" stroke="${strokeColor}" stroke-width="${strokeW}" />`);
+      }
+
+      // 3. Jalur Penghubung Tengah (Dari Ujung Bawah Kolom Kanan melintasi celah tengah ke Puncak Kolom Kiri)
+      if (rightNodes.length > 0 && leftNodes.length > 0) {
+        const rLast = getRelativeBox(rightNodes[rightNodes.length - 1], treeArea);
+        const lFirst = getRelativeBox(leftNodes[0], treeArea);
+        const centerChannelX = (rLast.left + (lFirst.left + lFirst.width)) / 2;
+        const dropY = rLast.bottom + 8;
+
+        paths.push(`<path d="M ${rLast.centerX} ${rLast.bottom} V ${dropY} H ${centerChannelX} V ${lFirst.top + lFirst.height / 2} H ${lFirst.left + lFirst.width}" fill="none" stroke="${strokeColor}" stroke-width="${strokeW}" stroke-linecap="round" stroke-linejoin="round" />`);
+      }
+
+      // 4. Jalur Vertikal Antar Ulama di Kolom Kiri
+      for (let i = 0; i < leftNodes.length - 1; i++) {
+        const curr = getRelativeBox(leftNodes[i], treeArea);
+        const next = getRelativeBox(leftNodes[i + 1], treeArea);
+        paths.push(`<line x1="${curr.centerX}" y1="${curr.bottom}" x2="${next.centerX}" y2="${next.top}" stroke="${strokeColor}" stroke-width="${strokeW}" />`);
+      }
+
+      // 5. Jalur dari Ulama Terakhir Kolom Kiri ke Kotak Penerima Ijazah
+      if (leftNodes.length > 0) {
+        const lLast = getRelativeBox(leftNodes[leftNodes.length - 1], treeArea);
+        const recBox = getRelativeBox(recipientEl, treeArea);
+        const targetY = recBox.top + recBox.height / 2;
+
+        paths.push(`<path d="M ${lLast.centerX} ${lLast.bottom} V ${targetY} H ${recBox.left}" fill="none" stroke="${strokeColor}" stroke-width="${strokeW}" stroke-linecap="round" stroke-linejoin="round" />`);
+      }
+
+      svg.innerHTML = paths.join('');
+    }
+
+    // =========================================================================
+    // RENDER MATA RANTAI SANAD & EDITOR LIST
+    // =========================================================================
+    function renderSanadChains() {
+      const rightCol = document.getElementById('cert-right-column');
+      const leftCol = document.getElementById('cert-left-column');
+
+      rightCol.innerHTML = appState.rightChain.map(name => `
+        <div class="sanad-pill">
+          <span dir="rtl" class="font-arabic font-bold text-[14.5px] leading-[1.2] text-[#1c1917] text-center">${escapeHtml(name)}</span>
+        </div>
+      `).join('');
+
+      leftCol.innerHTML = appState.leftChain.map(name => `
+        <div class="sanad-pill">
+          <span dir="rtl" class="font-arabic font-bold text-[14.5px] leading-[1.2] text-[#1c1917] text-center">${escapeHtml(name)}</span>
+        </div>
+      `).join('');
+
+      renderChainEditor('right', 'editor-right-chain', appState.rightChain);
+      renderChainEditor('left', 'editor-left-chain', appState.leftChain);
+
+      requestAnimationFrame(() => drawSanadConnectors());
+    }
+
+    function renderChainEditor(side, containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.innerHTML = items.map((name, idx) => `
+        <div class="flex items-center gap-1.5 bg-white p-1.5 rounded-lg border border-slate-200">
+          <span class="w-5 text-center text-[11px] font-bold text-amber-700">${side === 'right' ? idx + 1 : idx + 9}</span>
+          <input type="text" dir="rtl" value="${escapeAttr(name)}"
+            oninput="updateSanadItem('${side}', ${idx}, this.value)"
+            class="flex-1 px-2 py-1 text-xs font-arabic font-bold border border-slate-200 rounded focus:border-amber-500 outline-none" />
+          <button type="button" onclick="removeSanadItem('${side}', ${idx})" title="Hapus"
+            class="p-1 text-rose-500 hover:bg-rose-50 rounded text-xs">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function updateSanadItem(side, index, value) {
+      if (side === 'right') appState.rightChain[index] = value;
+      else appState.leftChain[index] = value;
+      renderSanadChains();
+      saveToLocalStorage();
+    }
+
+    function addSanadItem(side) {
+      const defaultNew = "الشيخ الفاضل ...";
+      if (side === 'right') appState.rightChain.push(defaultNew);
+      else appState.leftChain.push(defaultNew);
+      renderSanadChains();
+      saveToLocalStorage();
+    }
+
+    function removeSanadItem(side, index) {
+      if (side === 'right' && appState.rightChain.length > 1) appState.rightChain.splice(index, 1);
+      else if (side === 'left' && appState.leftChain.length > 1) appState.leftChain.splice(index, 1);
+      renderSanadChains();
+      saveToLocalStorage();
+    }
+
+    // =========================================================================
+    // SINKRONISASI STATE KE PRATINJAU SERTIFIKAT
+    // =========================================================================
+    function updateField(key, value) {
+      appState[key] = value;
+      applyStateToCertificate();
+      saveToLocalStorage();
+    }
+
+    function updatePhotoTransform(prop, val) {
+      appState[prop] = Number(val);
+      applyStateToCertificate();
+      saveToLocalStorage();
+    }
+
+    function applyStateToCertificate() {
+      document.getElementById('cert-org-main').textContent = appState.orgMain;
+      document.getElementById('cert-org-sub').textContent = appState.orgSub;
+      document.getElementById('cert-title-arabic').textContent = appState.titleArabic;
+      document.getElementById('cert-title-latin').textContent = appState.titleLatin;
+      document.getElementById('cert-author-name').textContent = appState.authorName;
+
+      document.getElementById('cert-recipient-name').textContent = appState.recipientName || "........................................";
+      const subEl = document.getElementById('cert-recipient-sub');
+      if (appState.recipientSub && appState.recipientSub.trim() !== "") {
+        subEl.textContent = appState.recipientSub;
+        subEl.classList.remove('hidden');
+      } else {
+        subEl.classList.add('hidden');
+      }
+
+      document.getElementById('cert-issue-date').textContent = appState.issueDateText;
+
+      // Kolom Pengesahan (2 atau 3 Kolom)
+      const footerGrid = document.getElementById('cert-footer-grid');
+      const rightCol = document.getElementById('cert-sig-right-col');
+      const rightPanel = document.getElementById('panel-sig-right');
+
+      if (appState.showThirdSig) {
+        footerGrid.classList.remove('grid-cols-2');
+        footerGrid.classList.add('grid-cols-3');
+        rightCol.classList.remove('hidden');
+        if (rightPanel) rightPanel.classList.remove('opacity-50');
+      } else {
+        footerGrid.classList.remove('grid-cols-3');
+        footerGrid.classList.add('grid-cols-2');
+        rightCol.classList.add('hidden');
+        if (rightPanel) rightPanel.classList.add('opacity-50');
+      }
+
+      document.getElementById('cert-sig-left-title').textContent = appState.sigLeftTitle;
+      document.getElementById('cert-sig-left-name').textContent = appState.sigLeftName;
+      document.getElementById('cert-sig-center-title').textContent = appState.sigCenterTitle;
+      document.getElementById('cert-sig-center-name').textContent = appState.sigCenterName;
+      document.getElementById('cert-sig-right-title').textContent = appState.sigRightTitle;
+      document.getElementById('cert-sig-right-name').textContent = appState.sigRightName;
+
+      // Foto Peserta
+      const photoFrame = document.getElementById('cert-photo-frame');
+      const photoImg = document.getElementById('cert-recipient-photo');
+      const photoPlaceholder = document.getElementById('cert-recipient-placeholder');
+      const thumbImg = document.getElementById('thumb-recipient-photo');
+      const thumbIcon = document.getElementById('thumb-recipient-icon');
+
+      photoFrame.style.display = appState.showPhoto ? 'flex' : 'none';
+
+      if (appState.recipientPhoto) {
+        photoImg.src = appState.recipientPhoto;
+        photoImg.classList.remove('hidden');
+        photoPlaceholder.classList.add('hidden');
+        photoImg.style.transform = `scale(${appState.photoScale / 100})`;
+        photoImg.style.objectPosition = `50% ${appState.photoPosY}%`;
+
+        thumbImg.src = appState.recipientPhoto;
+        thumbImg.classList.remove('hidden');
+        thumbIcon.classList.add('hidden');
+      } else {
+        photoImg.classList.add('hidden');
+        photoPlaceholder.classList.remove('hidden');
+        thumbImg.classList.add('hidden');
+        thumbIcon.classList.remove('hidden');
+      }
+
+      // Logo RBA
+      const rbaImg = document.getElementById('cert-logo-rba-img');
+      const rbaDef = document.getElementById('cert-logo-rba-default');
+      if (appState.logoRBA) {
+        rbaImg.src = appState.logoRBA;
+        rbaImg.classList.remove('hidden');
+        rbaDef.classList.add('hidden');
+      } else {
+        rbaImg.classList.add('hidden');
+        rbaDef.classList.remove('hidden');
+      }
+
+      // Stempel RBA Bawaan & Badge Verified
+      const defaultLeftStamp = document.getElementById('cert-stamp-left-default');
+      defaultLeftStamp.classList.toggle('hidden', Boolean(appState.stampLeftImg));
+
+      const defaultRightBadge = document.getElementById('cert-badge-rba-verified');
+      defaultRightBadge.classList.toggle('hidden', Boolean(appState.stampRightImg || appState.sigRightImg));
+
+      toggleImageElement('cert-sig-left-img', appState.sigLeftImg);
+      toggleImageElement('cert-stamp-left-img', appState.stampLeftImg);
+      toggleImageElement('cert-sig-center-img', appState.sigCenterImg);
+      toggleImageElement('cert-stamp-center-img', appState.stampCenterImg);
+      toggleImageElement('cert-sig-right-img', appState.sigRightImg);
+      toggleImageElement('cert-stamp-right-img', appState.stampRightImg);
+
+      requestAnimationFrame(() => drawSanadConnectors());
+    }
+
+    function toggleImageElement(id, dataUrl) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (dataUrl) {
+        el.src = dataUrl;
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+
+    function syncInputsFromState() {
+      document.getElementById('input-org-main').value = appState.orgMain;
+      document.getElementById('input-org-sub').value = appState.orgSub;
+      document.getElementById('input-title-arabic').value = appState.titleArabic;
+      document.getElementById('input-title-latin').value = appState.titleLatin;
+      document.getElementById('input-author-name').value = appState.authorName;
+      document.getElementById('input-recipient-name').value = appState.recipientName;
+      document.getElementById('input-recipient-sub').value = appState.recipientSub || "";
+      document.getElementById('chk-show-photo').checked = appState.showPhoto;
+      document.getElementById('chk-show-third-sig').checked = appState.showThirdSig;
+      document.getElementById('input-issue-date').value = appState.issueDateText;
+
+      document.getElementById('input-sig-left-title').value = appState.sigLeftTitle;
+      document.getElementById('input-sig-left-name').value = appState.sigLeftName;
+      document.getElementById('input-sig-center-title').value = appState.sigCenterTitle;
+      document.getElementById('input-sig-center-name').value = appState.sigCenterName;
+      document.getElementById('input-sig-right-title').value = appState.sigRightTitle;
+      document.getElementById('input-sig-right-name').value = appState.sigRightName;
+
+      applyStateToCertificate();
+    }
+
+    // =========================================================================
+    // NAVIGASI TAB & RESPONSIVE MOBILE VIEW
+    // =========================================================================
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = "tab-btn py-2 px-1 rounded-lg text-slate-600 hover:bg-white/60 transition";
+      });
+      const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+      if (activeBtn) {
+        activeBtn.className = "tab-btn py-2 px-1 rounded-lg bg-white text-amber-700 shadow-sm border border-amber-200 transition";
+      }
+    }
+
+    function setMobileView(view) {
+      const editorPane = document.getElementById('editor-pane');
+      const previewPane = document.getElementById('preview-pane');
+      const btnEditor = document.getElementById('mob-btn-editor');
+      const btnPreview = document.getElementById('mob-btn-preview');
+
+      if (view === 'preview') {
+        editorPane.classList.add('hidden');
+        editorPane.classList.remove('flex');
+        previewPane.classList.remove('hidden');
+        previewPane.classList.add('flex');
+
+        btnPreview.className = "flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
+        btnEditor.className = "flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 transition flex items-center justify-center gap-1.5";
+
+        // Hitung ulang skala saat panel pratinjau dibuka di mobile
+        requestAnimationFrame(() => {
+          updatePreviewScale();
+        });
+      } else {
+        previewPane.classList.add('hidden');
+        previewPane.classList.remove('flex');
+        editorPane.classList.remove('hidden');
+        editorPane.classList.add('flex');
+
+        btnEditor.className = "flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-amber-600 text-white shadow-sm transition flex items-center justify-center gap-1.5";
+        btnPreview.className = "flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 transition flex items-center justify-center gap-1.5";
+      }
+    }
+
+    // =========================================================================
+    // UPLOAD GAMBAR, PRESET & BATCH PESERTA
+    // =========================================================================
+    function handleImageUpload(event, targetKey) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        appState[targetKey] = e.target.result;
+        applyStateToCertificate();
+        saveToLocalStorage();
+        showToast("Gambar berhasil dimuat!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearImage(targetKey) {
+      appState[targetKey] = "";
+      applyStateToCertificate();
+      saveToLocalStorage();
+    }
+
+    function clearSigImages(pos) {
+      appState[`sig${pos}Img`] = "";
+      appState[`stamp${pos}Img`] = "";
+      applyStateToCertificate();
+      saveToLocalStorage();
+    }
+
+    function applyPresetRBA() {
+      appState.orgMain = "RUMAH BAHASA ARAB";
+      appState.orgSub = "PLATFORM BELAJAR INTERAKTIF";
+      appState.sigLeftTitle = "Direktur Utama • مدير المؤسسة";
+      appState.sigLeftName = "Pimpinan Rumah Bahasa Arab";
+      appState.logoRBA = "";
+      syncInputsFromState();
+      saveToLocalStorage();
+      showToast("Kop Rumah Bahasa Arab (RBA) diterapkan!");
+    }
+
+    function setIssuePreset(loc) {
+      if (loc === 'pamekasan') {
+        appState.issueDateText = "حررت هذه الإجازة في\nبميكاسان، إندونيسيا\nبتاريخ: ١٣ من جمادى الأولى ١٤٤٨ هـ\nالموافق: ٢٨ من أكتوبر ٢٠٢٦ م";
+      } else if (loc === 'jambi') {
+        appState.issueDateText = "حررت هذه الإجازة في\nمدينة جامبي، بجمهورية إندونيسيا\nبتاريخ: ٣ من محرم ١٤٤٨ هـ\nالموافق: ١٨ من يونيو ٢٠٢٦ م";
+      } else if (loc === 'makassar') {
+        appState.issueDateText = "حررت هذه الإجازة في\nمدينة ماكاسار، بجمهورية إندونيسيا\nبتاريخ: ١٣ من جمادى الأولى ١٤٤٨ هـ\nالموافق: ٢٨ من أكتوبر ٢٠٢٦ م";
+      }
+      document.getElementById('input-issue-date').value = appState.issueDateText;
+      applyStateToCertificate();
+      saveToLocalStorage();
+    }
+
+    function addCurrentToBatch() {
+      const name = (appState.recipientName || "").trim();
+      if (!name) {
+        showToast("Isi nama penerima terlebih dahulu.");
+        return;
+      }
+      appState.batchParticipants.unshift({
+        id: Date.now(),
+        name,
+        sub: appState.recipientSub || "",
+        photo: appState.recipientPhoto || ""
+      });
+      renderBatchList();
+      saveToLocalStorage();
+      showToast("Peserta disimpan ke antrean!");
+    }
+
+    function loadBatchParticipant(id) {
+      const item = appState.batchParticipants.find(p => p.id === id);
+      if (!item) return;
+      appState.recipientName = item.name;
+      appState.recipientSub = item.sub || "";
+      appState.recipientPhoto = item.photo || "";
+      syncInputsFromState();
+      saveToLocalStorage();
+      showToast(`Memuat: ${item.name}`);
+    }
+
+    function deleteBatchParticipant(id) {
+      appState.batchParticipants = appState.batchParticipants.filter(p => p.id !== id);
+      renderBatchList();
+      saveToLocalStorage();
+    }
+
+    function renderBatchList() {
+      const listEl = document.getElementById('batch-list');
+      const countEl = document.getElementById('batch-count');
+      if (!listEl || !countEl) return;
+
+      countEl.textContent = appState.batchParticipants.length;
+      if (appState.batchParticipants.length === 0) {
+        listEl.innerHTML = `<p class="text-xs text-slate-400 italic py-2 text-center">Belum ada peserta tersimpan.</p>`;
+        return;
+      }
+
+      listEl.innerHTML = appState.batchParticipants.map(item => `
+        <div class="flex items-center justify-between gap-2 bg-white p-2 rounded-lg border border-slate-200 hover:border-amber-400 transition">
+          <button type="button" onclick="loadBatchParticipant(${item.id})" class="flex-1 text-left">
+            <p dir="auto" class="font-arabic font-bold text-xs text-slate-800">${escapeHtml(item.name)}</p>
+            <p class="text-[10px] text-slate-500 truncate">${escapeHtml(item.sub || 'Tanpa keterangan')}</p>
+          </button>
+          <button type="button" onclick="deleteBatchParticipant(${item.id})" class="p-1 text-rose-500 hover:bg-rose-50 rounded text-xs">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function exportBatchJSON() {
+      const blob = new Blob([JSON.stringify(appState, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ijazah-sanad-ajurrumiyyah-rba-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("File JSON berhasil diunduh!");
+    }
+
+    function importBatchJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          appState = { ...appState, ...imported };
+          syncInputsFromState();
+          renderSanadChains();
+          renderBatchList();
+          saveToLocalStorage();
+          showToast("Konfigurasi & data peserta berhasil dimuat!");
+        } catch (err) {
+          showToast("File JSON tidak valid.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetAllToDefault() {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    // =========================================================================
+    // EKSPOR PNG RESOLUSI TINGGI (KLONING SKALA 1:1 AGAR BEBAS DISTORSI)
+    // =========================================================================
+    async function downloadAsPNG() {
+      const btn = document.getElementById('btn-download-png');
+      const originalHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Memproses HD...</span>`;
+
+      let offscreenHost = null;
+      try {
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        const sourceSheet = document.getElementById('certificate-sheet');
+
+        // Buat container off-screen berskala 1:1 (tanpa transform scale)
+        offscreenHost = document.createElement('div');
+        offscreenHost.style.position = 'fixed';
+        offscreenHost.style.left = '-9999px';
+        offscreenHost.style.top = '0';
+        offscreenHost.style.width = '794px';
+        offscreenHost.style.height = '1123px';
+        offscreenHost.style.zIndex = '-1';
+        document.body.appendChild(offscreenHost);
+
+        const cloneSheet = sourceSheet.cloneNode(true);
+        cloneSheet.style.transform = 'none';
+        cloneSheet.style.width = '794px';
+        cloneSheet.style.height = '1123px';
+        offscreenHost.appendChild(cloneSheet);
+
+        // Gambar ulang jalur konektor SVG pada elemen kloning 1:1
+        const cloneTree = cloneSheet.querySelector('#sanad-tree-area');
+        drawSanadConnectors(cloneTree);
+
+        await new Promise(resolve => setTimeout(resolve, 120));
+
+        const canvas = await html2canvas(cloneSheet, {
+          scale: 3, // Resolusi tinggi ~2382 x 3369 px
+          useCORS: true,
+          backgroundColor: '#fffdf8',
+          width: 794,
+          height: 1123,
+          windowWidth: 794,
+          windowHeight: 1123
+        });
+
+        const safeName = (appState.recipientName || 'peserta')
+          .trim()
+          .replace(/[^\p{L}\p{N}\s_-]/gu, '')
+          .replace(/\s+/g, '_')
+          .slice(0, 40) || 'peserta';
+
+        const link = document.createElement('a');
+        link.download = `Ijazah_Sanad_Al-Ajurrumiyyah_RBA_${safeName}.png`;
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
+
+        showToast("Sertifikat PNG resolusi tinggi berhasil diunduh!");
+      } catch (err) {
+        console.error("Gagal mengekspor PNG:", err);
+        showToast("Terjadi kendala saat membuat PNG. Gunakan tombol Cetak / PDF.");
+      } finally {
+        if (offscreenHost && offscreenHost.parentNode) {
+          offscreenHost.parentNode.removeChild(offscreenHost);
+        }
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+      }
+    }
+
+    function printCertificate() {
+      // Pastikan konektor tergambar pada skala penuh sebelum dialog print terbuka
+      const sheet = document.getElementById('certificate-sheet');
+      sheet.style.transform = 'none';
+      drawSanadConnectors();
+      window.print();
+      setTimeout(updatePreviewScale, 300);
+    }
+
+    // =========================================================================
+    // PENYIMPANAN LOCALSTORAGE & HELPER
+    // =========================================================================
+    function saveToLocalStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        // Abaikan jika kapasitas penyimpanan penuh
+      }
+    }
+
+    function loadFromLocalStorage() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          appState = { ...appState, ...JSON.parse(saved) };
+        }
+      } catch (e) {
+        console.warn("Gagal membaca data tersimpan:", e);
+      }
+    }
+
+    function showToast(message) {
+      const box = document.getElementById('toast-box');
+      const msg = document.getElementById('toast-msg');
+      if (!box || !msg) return;
+      msg.textContent = message;
+      box.classList.remove('opacity-0');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        box.classList.add('opacity-0');
+      }, 2800);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function escapeAttr(str) {
+      return String(str).replace(/"/g, "&quot;");
+    }
+
+    // =========================================================================
+    // INISIALISASI APLIKASI
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadFromLocalStorage();
+      syncInputsFromState();
+      renderSanadChains();
+      renderBatchList();
+      updatePreviewScale();
+
+      // Pantau perubahan ukuran layar / kontainer agar skala pratinjau selalu pas
+      const scrollContainer = document.getElementById('preview-scroll-container');
+      if (window.ResizeObserver && scrollContainer) {
+        const ro = new ResizeObserver(() => updatePreviewScale());
+        ro.observe(scrollContainer);
+      }
+      window.addEventListener('resize', updatePreviewScale);
+
+      // Pastikan konektor digambar ulang setelah font Arab selesai dimuat
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          drawSanadConnectors();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
