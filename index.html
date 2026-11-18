@@ -119,8 +119,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4px 14px;
-      min-height: 31px;
+      padding: 3px 12px;
+      min-height: 27px;
+      transition: all 0.15s ease;
     }
 
     .sanad-pill::after {
@@ -316,12 +317,12 @@
             </div>
 
             <!-- Foto Peserta -->
-            <div class="pt-2 border-t border-amber-200/70">
-              <div class="flex items-center justify-between mb-1.5">
-                <label class="text-xs font-semibold text-slate-700">Foto Peserta (Bingkai Bulat Emas)</label>
+            <div class="pt-2 border-t border-amber-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-semibold text-slate-700">Foto Bulat Peserta</label>
                 <label class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 cursor-pointer">
-                  <input type="checkbox" id="chk-show-photo" checked onchange="updateField('showPhoto', this.checked)" class="rounded text-amber-600" />
-                  Tampilkan Foto
+                  <input type="checkbox" id="chk-show-photo" checked onchange="updateField('showPhoto', this.checked)" class="rounded text-amber-600 focus:ring-amber-500" />
+                  Tampilkan Bingkai Foto
                 </label>
               </div>
               <div class="flex items-center gap-3">
@@ -596,12 +597,12 @@
       </div>
 
       <!-- Kontainer Scroll Pratinjau -->
-      <div id="preview-scroll-container" class="flex-1 overflow-auto p-3 sm:p-5 flex justify-center items-start">
+      <div id="preview-scroll-container" class="flex-1 overflow-auto p-2 sm:p-4 flex justify-center items-start">
         <!-- Wrapper dengan dimensi yang dihitung dinamis sesuai skala CSS agar tidak meluap atau terpotong -->
         <div id="preview-scaler-box" class="relative shadow-2xl bg-white transition-all duration-150">
 
           <!-- LEMBAR SERTIFIKAT A4 (794px x 1123px) -->
-          <div id="certificate-sheet" class="islamic-watermark flex flex-col justify-between px-[36px] py-[28px]">
+          <div id="certificate-sheet" class="islamic-watermark flex flex-col justify-between px-[32px] py-[22px]">
 
             <!-- Bingkai Emas Luar & Dalam -->
             <div class="outer-gold-border"></div>
@@ -630,88 +631,88 @@
             </svg>
 
             <!-- 1. HEADER KOP RESMI RUMAH BAHASA ARAB (RBA) -->
-            <header class="relative z-10 flex flex-col items-center pt-1">
-              <div class="flex items-center justify-center gap-3.5">
+            <header class="relative z-10 flex flex-col items-center pt-0.5">
+              <div class="flex items-center justify-center gap-3">
                 <!-- Ikon Logo RBA -->
-                <div class="w-[50px] h-[50px] flex items-center justify-center flex-shrink-0">
+                <div class="w-[46px] h-[46px] flex items-center justify-center flex-shrink-0">
                   <img id="cert-logo-rba-img" src="" alt="Logo RBA" class="w-full h-full object-contain rounded-xl hidden" />
-                  <div id="cert-logo-rba-default" class="w-full h-full rounded-[12px] bg-gradient-to-br from-[#fde047] via-[#facc15] to-[#38bdf8] p-[3.5px] shadow-sm flex items-center justify-center">
-                    <div class="w-full h-full rounded-[9px] bg-gradient-to-b from-[#0284c7] via-[#0369a1] to-[#1e3a8a] flex items-center justify-center relative overflow-hidden">
+                  <div id="cert-logo-rba-default" class="w-full h-full rounded-[11px] bg-gradient-to-br from-[#fde047] via-[#facc15] to-[#38bdf8] p-[3px] shadow-sm flex items-center justify-center">
+                    <div class="w-full h-full rounded-[8px] bg-gradient-to-b from-[#0284c7] via-[#0369a1] to-[#1e3a8a] flex items-center justify-center relative overflow-hidden">
                       <div class="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-white/15"></div>
-                      <span class="font-arabic font-bold text-[22px] text-white leading-none" style="margin-top:-4px;">ض</span>
+                      <span class="font-arabic font-bold text-[20px] text-white leading-none" style="margin-top:-3px;">ض</span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Teks Nama Lembaga RBA -->
                 <div class="text-left">
-                  <h1 id="cert-org-main" class="text-[21px] font-extrabold tracking-[0.04em] text-[#1e293b] leading-none">
+                  <h1 id="cert-org-main" class="text-[20px] font-extrabold tracking-[0.04em] text-[#1e293b] leading-none">
                     RUMAH BAHASA ARAB
                   </h1>
-                  <p id="cert-org-sub" class="text-[9.5px] font-bold tracking-[0.22em] text-[#64748b] uppercase mt-1.5">
+                  <p id="cert-org-sub" class="text-[9px] font-bold tracking-[0.22em] text-[#64748b] uppercase mt-1">
                     PLATFORM BELAJAR INTERAKTIF
                   </p>
                 </div>
               </div>
 
               <!-- Garis Ornamen Pemisah -->
-              <div class="flex items-center justify-center gap-3 my-2 text-[#b88a3b]">
-                <span class="h-[1px] w-28 bg-gradient-to-r from-transparent to-[#b88a3b]"></span>
-                <span class="text-[11px] tracking-widest">❖ ◈ ❖</span>
-                <span class="h-[1px] w-28 bg-gradient-to-l from-transparent to-[#b88a3b]"></span>
+              <div class="flex items-center justify-center gap-2.5 my-1.5 text-[#b88a3b]">
+                <span class="h-[1px] w-24 bg-gradient-to-r from-transparent to-[#b88a3b]"></span>
+                <span class="text-[10px] tracking-widest">❖ ◈ ❖</span>
+                <span class="h-[1px] w-24 bg-gradient-to-l from-transparent to-[#b88a3b]"></span>
               </div>
 
               <!-- Judul Silsilah Sanad -->
               <div class="text-center">
-                <h2 id="cert-title-arabic" dir="rtl" class="font-arabic font-bold text-[22px] leading-[1.2] text-[#8c6222]">
+                <h2 id="cert-title-arabic" dir="rtl" class="font-arabic font-bold text-[21px] leading-[1.15] text-[#8c6222]">
                   سلسلة السند في كتاب الآجرومية
                 </h2>
-                <p id="cert-title-latin" class="font-cinzel text-[13.5px] font-bold tracking-[0.12em] text-[#7d5316] uppercase mt-0.5">
+                <p id="cert-title-latin" class="font-cinzel text-[13px] font-bold tracking-[0.11em] text-[#7d5316] uppercase mt-0.5">
                   SILSILAH SANAD KITAB AL-AJURRUMIYYAH
                 </p>
               </div>
             </header>
 
             <!-- 2. POHON SILSILAH SANAD (SVG KONEKTOR DINAMIS + KARTUS MU'ALLIF + 2 KOLOM + PESERTA) -->
-            <main id="sanad-tree-area" class="relative z-10 flex-1 flex flex-col justify-between my-2">
+            <main id="sanad-tree-area" class="relative z-10 flex-1 flex flex-col justify-between my-1.5">
 
               <!-- SVG Layer Konektor Merah Marun (Dihitung presisi dari posisi kartu aktual) -->
               <svg id="sanad-connectors-svg" class="absolute inset-0 w-full h-full pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg"></svg>
 
               <!-- Puncak Pohon: Mu'allif Kitab -->
               <div class="relative z-10 flex justify-center">
-                <div id="node-author" class="author-cartouche px-8 py-2 max-w-[540px] text-center">
-                  <p id="cert-author-name" dir="rtl" class="font-arabic font-bold text-[19px] leading-[1.3] text-[#1c1917]">
+                <div id="node-author" class="author-cartouche px-7 py-2 max-w-[530px] text-center">
+                  <p id="cert-author-name" dir="rtl" class="font-arabic font-bold text-[18.5px] leading-[1.25] text-[#1c1917]">
                     الشيخ النحوي أبو عبد الله محمد بن محمد بن داود الصنهاجي
                   </p>
                 </div>
               </div>
 
-              <!-- Grid 2 Kolom Mata Rantai Ulama (Kiri & Kanan dengan celah tengah 44px untuk jalur penghubung) -->
-              <div class="relative z-10 grid grid-cols-2 gap-x-[44px] my-auto py-2">
+              <!-- Grid 2 Kolom Mata Rantai Ulama (Jarak sedikit lebih renggang dan serasi) -->
+              <div class="relative z-10 grid grid-cols-2 gap-x-[30px] my-auto py-1">
                 <!-- Kolom Kiri (Urutan 9-16) -->
-                <div id="cert-left-column" class="flex flex-col justify-between gap-[11px]"></div>
+                <div id="cert-left-column" class="flex flex-col gap-[24px]"></div>
 
                 <!-- Kolom Kanan (Urutan 1-8) -->
-                <div id="cert-right-column" class="flex flex-col justify-between gap-[11px]"></div>
+                <div id="cert-right-column" class="flex flex-col gap-[24px]"></div>
               </div>
 
               <!-- Baris Penerima Ijazah & Keterangan Tanggal -->
-              <div class="relative z-10 grid grid-cols-12 items-center gap-3 pt-1">
+              <div class="relative z-10 grid grid-cols-12 items-center gap-2.5 pt-0.5">
                 <!-- Foto Bulat + Kotak Nama Penerima (8 Kolom Kiri-Tengah) -->
-                <div class="col-span-8 flex items-center justify-end gap-3">
+                <div class="col-span-8 flex items-center justify-end gap-2.5">
                   <!-- Bingkai Foto Bulat -->
-                  <div id="cert-photo-frame" class="w-[54px] h-[54px] rounded-full border-[2.5px] border-[#b88a3b] shadow-md overflow-hidden bg-[#f5ebd6] flex-shrink-0 flex items-center justify-center">
+                  <div id="cert-photo-frame" class="w-[50px] h-[50px] rounded-full border-[2.5px] border-[#b88a3b] shadow-md overflow-hidden bg-[#f5ebd6] flex-shrink-0 flex items-center justify-center">
                     <img id="cert-recipient-photo" src="" alt="Foto Peserta" class="w-full h-full object-cover hidden" />
-                    <i id="cert-recipient-placeholder" class="fa-solid fa-user-tie text-[#b88a3b] text-xl"></i>
+                    <i id="cert-recipient-placeholder" class="fa-solid fa-user-tie text-[#b88a3b] text-lg"></i>
                   </div>
 
                   <!-- Kotak Nama Penerima -->
-                  <div id="node-recipient" class="recipient-pill flex-1 max-w-[360px] px-5 py-2 text-center">
-                    <p id="cert-recipient-name" dir="auto" class="font-arabic font-bold text-[17.5px] leading-[1.25] text-[#1c1917]">
+                  <div id="node-recipient" class="recipient-pill flex-1 max-w-[365px] px-4 py-1.5 text-center">
+                    <p id="cert-recipient-name" dir="auto" class="font-arabic font-bold text-[17px] leading-[1.2] text-[#1c1917]">
                       محمد نور مسلم بن محمد واحد
                     </p>
-                    <p id="cert-recipient-sub" dir="auto" class="text-[9.5px] font-semibold text-[#6b4712] mt-0.5">
+                    <p id="cert-recipient-sub" dir="auto" class="text-[9px] font-semibold text-[#6b4712] mt-0.5">
                       Kitab Al-Ajurrumiyyah • Rumah Bahasa Arab
                     </p>
                   </div>
@@ -719,7 +720,7 @@
 
                 <!-- Keterangan Tempat & Tanggal (4 Kolom Kanan) -->
                 <div class="col-span-4 text-right pl-1">
-                  <div id="cert-issue-date" dir="rtl" class="font-arabic text-[11.5px] leading-[1.4] text-[#292524] whitespace-pre-line font-bold">حررت هذه الإجازة في
+                  <div id="cert-issue-date" dir="rtl" class="font-arabic text-[11px] leading-[1.35] text-[#292524] whitespace-pre-line font-bold">حررت هذه الإجازة في
 بميكاسان، إندونيسيا
 بتاريخ: ١٣ من جمادى الأولى ١٤٤٨ هـ
 الموافق: ٢٨ من أكتوبر ٢٠٢٦ م</div>
@@ -729,16 +730,16 @@
             </main>
 
             <!-- 3. BAGIAN PENGESAHAN BAWAH (TANDA TANGAN & STEMPEL RBA) -->
-            <footer id="cert-footer-grid" class="relative z-10 grid grid-cols-3 gap-4 pt-2 pb-1 text-center items-end border-t border-[#c59b48]/30">
+            <footer id="cert-footer-grid" class="relative z-10 grid grid-cols-3 gap-3 pt-1.5 pb-0.5 text-center items-end border-t border-[#c59b48]/30">
 
               <!-- Kolom Kiri: Direktur Utama RBA -->
-              <div class="flex flex-col items-center justify-between h-[112px] relative">
-                <p id="cert-sig-left-title" dir="auto" class="text-[11px] font-bold text-[#7a541d]">
+              <div class="flex flex-col items-center justify-between h-[102px] relative">
+                <p id="cert-sig-left-title" dir="auto" class="text-[10.5px] font-bold text-[#7a541d]">
                   Direktur Utama • مدير المؤسسة
                 </p>
-                <div class="relative w-full h-[64px] flex items-center justify-center">
+                <div class="relative w-full h-[58px] flex items-center justify-center">
                   <!-- Stempel Vektor RBA Bawaan -->
-                  <svg id="cert-stamp-left-default" viewBox="0 0 100 100" class="w-[66px] h-[66px] opacity-80 -ml-8">
+                  <svg id="cert-stamp-left-default" viewBox="0 0 100 100" class="w-[62px] h-[62px] opacity-80 -ml-8">
                     <circle cx="50" cy="50" r="44" fill="none" stroke="#3730a3" stroke-width="2.5"/>
                     <circle cx="50" cy="50" r="38" fill="none" stroke="#3730a3" stroke-width="1" stroke-dasharray="2 2"/>
                     <circle cx="50" cy="50" r="23" fill="none" stroke="#3730a3" stroke-width="1.5"/>
@@ -746,47 +747,47 @@
                     <text x="50" y="55" text-anchor="middle" fill="#3730a3" font-size="16" font-weight="bold" font-family="Amiri">ض</text>
                     <text x="50" y="87" text-anchor="middle" fill="#3730a3" font-size="6.2" font-weight="bold">VERIFIED SANAD</text>
                   </svg>
-                  <img id="cert-stamp-left-img" src="" alt="Stempel Kiri" class="max-h-[70px] max-w-[90px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
-                  <img id="cert-sig-left-img" src="" alt="TTD Kiri" class="max-h-[56px] max-w-[105px] object-contain mix-blend-multiply -ml-2 hidden" />
+                  <img id="cert-stamp-left-img" src="" alt="Stempel Kiri" class="max-h-[64px] max-w-[85px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
+                  <img id="cert-sig-left-img" src="" alt="TTD Kiri" class="max-h-[52px] max-w-[100px] object-contain mix-blend-multiply -ml-2 hidden" />
                 </div>
-                <p id="cert-sig-left-name" dir="auto" class="text-[11.5px] font-bold text-[#1c1917] leading-tight">
+                <p id="cert-sig-left-name" dir="auto" class="text-[11px] font-bold text-[#1c1917] leading-tight">
                   Pimpinan Rumah Bahasa Arab
                 </p>
               </div>
 
               <!-- Kolom Tengah: Al-Mujiz -->
-              <div class="flex flex-col items-center justify-between h-[112px] relative">
-                <p id="cert-sig-center-title" dir="rtl" class="font-arabic font-bold text-[14.5px] text-[#7a541d]">
+              <div class="flex flex-col items-center justify-between h-[102px] relative">
+                <p id="cert-sig-center-title" dir="rtl" class="font-arabic font-bold text-[14px] text-[#7a541d]">
                   المجيز
                 </p>
-                <div class="relative w-full h-[64px] flex items-center justify-center">
-                  <img id="cert-stamp-center-img" src="" alt="Stempel Tengah" class="max-h-[70px] max-w-[90px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
-                  <img id="cert-sig-center-img" src="" alt="TTD Tengah" class="max-h-[56px] max-w-[115px] object-contain mix-blend-multiply -ml-2 hidden" />
+                <div class="relative w-full h-[58px] flex items-center justify-center">
+                  <img id="cert-stamp-center-img" src="" alt="Stempel Tengah" class="max-h-[64px] max-w-[85px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
+                  <img id="cert-sig-center-img" src="" alt="TTD Tengah" class="max-h-[52px] max-w-[110px] object-contain mix-blend-multiply -ml-2 hidden" />
                 </div>
-                <p id="cert-sig-center-name" dir="rtl" class="font-arabic font-bold text-[13px] text-[#1c1917] leading-tight">
+                <p id="cert-sig-center-name" dir="rtl" class="font-arabic font-bold text-[12.5px] text-[#1c1917] leading-tight">
                   الشيخ الدكتور غمدان بن أحمد بن رزق اليمني
                 </p>
               </div>
 
               <!-- Kolom Kanan: Koordinator Akademik RBA + Badge Verifikasi Emas -->
-              <div id="cert-sig-right-col" class="flex flex-col items-center justify-between h-[112px] relative">
-                <p id="cert-sig-right-title" dir="auto" class="text-[11px] font-bold text-[#7a541d]">
+              <div id="cert-sig-right-col" class="flex flex-col items-center justify-between h-[102px] relative">
+                <p id="cert-sig-right-title" dir="auto" class="text-[10.5px] font-bold text-[#7a541d]">
                   Koordinator Akademik RBA
                 </p>
-                <div class="relative w-full h-[64px] flex items-center justify-center">
+                <div class="relative w-full h-[58px] flex items-center justify-center">
                   <!-- Badge Verifikasi Emas RBA -->
                   <div id="cert-badge-rba-verified" class="flex flex-col items-center">
-                    <div class="w-[44px] h-[44px] rounded-full border-[2px] border-[#eab308] bg-[#fefce8] flex items-center justify-center shadow-sm">
-                      <i class="fa-solid fa-award text-[#ca8a04] text-[18px]"></i>
+                    <div class="w-[40px] h-[40px] rounded-full border-[2px] border-[#eab308] bg-[#fefce8] flex items-center justify-center shadow-sm">
+                      <i class="fa-solid fa-award text-[#ca8a04] text-[16px]"></i>
                     </div>
-                    <span class="bg-[#eab308] text-white text-[7px] font-extrabold tracking-wider px-2.5 py-[1px] rounded-full -mt-1.5 shadow-sm">
+                    <span class="bg-[#eab308] text-white text-[6.5px] font-extrabold tracking-wider px-2 py-[1px] rounded-full -mt-1.5 shadow-sm">
                       VERIFIED
                     </span>
                   </div>
-                  <img id="cert-stamp-right-img" src="" alt="Stempel Kanan" class="max-h-[70px] max-w-[90px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
-                  <img id="cert-sig-right-img" src="" alt="TTD Kanan" class="max-h-[56px] max-w-[105px] object-contain mix-blend-multiply -ml-2 hidden" />
+                  <img id="cert-stamp-right-img" src="" alt="Stempel Kanan" class="max-h-[64px] max-w-[85px] object-contain opacity-85 mix-blend-multiply -ml-6 hidden" />
+                  <img id="cert-sig-right-img" src="" alt="TTD Kanan" class="max-h-[52px] max-w-[100px] object-contain mix-blend-multiply -ml-2 hidden" />
                 </div>
-                <p id="cert-sig-right-name" dir="auto" class="text-[11.5px] font-bold text-[#1c1917] leading-tight">
+                <p id="cert-sig-right-name" dir="auto" class="text-[11px] font-bold text-[#1c1917] leading-tight">
                   Admin Akademik RBA
                 </p>
               </div>
@@ -890,12 +891,16 @@
 
       const baseWidth = 794;
       const baseHeight = 1123;
-      const availableWidth = container.clientWidth - 28; // padding kiri kanan
+      const availableWidth = container.clientWidth - 20; // padding kiri kanan lebih rapat
+      const availableHeight = container.clientHeight - 20;
 
       if (availableWidth <= 0) return; // saat tersembunyi di tab mobile
 
       if (zoomMode === 'fit') {
-        currentScale = Math.min(availableWidth / baseWidth, 1);
+        // Sesuaikan otomatis dengan lebar maupun tinggi layar desktop agar tidak meluber ke bawah
+        const scaleW = availableWidth / baseWidth;
+        const scaleH = availableHeight > 360 ? (availableHeight / baseHeight) : scaleW;
+        currentScale = Math.min(scaleW, window.innerWidth >= 1024 ? scaleH : scaleW, 1);
       } else {
         currentScale = Number(zoomMode);
       }
@@ -950,7 +955,10 @@
     }
 
     function drawSanadConnectors(targetTreeArea = null) {
-      const treeArea = targetTreeArea || document.getElementById('sanad-tree-area');
+      // Pastikan targetTreeArea benar-benar elemen DOM (bukan angka timestamp dari requestAnimationFrame)
+      const treeArea = (targetTreeArea && typeof targetTreeArea.querySelector === 'function')
+        ? targetTreeArea
+        : document.getElementById('sanad-tree-area');
       if (!treeArea) return;
 
       const svg = treeArea.querySelector('#sanad-connectors-svg');
@@ -990,7 +998,7 @@
         const rLast = getRelativeBox(rightNodes[rightNodes.length - 1], treeArea);
         const lFirst = getRelativeBox(leftNodes[0], treeArea);
         const centerChannelX = (rLast.left + (lFirst.left + lFirst.width)) / 2;
-        const dropY = rLast.bottom + 8;
+        const dropY = rLast.bottom + 5;
 
         paths.push(`<path d="M ${rLast.centerX} ${rLast.bottom} V ${dropY} H ${centerChannelX} V ${lFirst.top + lFirst.height / 2} H ${lFirst.left + lFirst.width}" fill="none" stroke="${strokeColor}" stroke-width="${strokeW}" stroke-linecap="round" stroke-linejoin="round" />`);
       }
@@ -1021,22 +1029,30 @@
       const rightCol = document.getElementById('cert-right-column');
       const leftCol = document.getElementById('cert-left-column');
 
+      // Sesuaikan padding & ukuran font secara fleksibel mengikuti tinggi ruang kolom
+      const maxCount = Math.max(appState.rightChain.length, appState.leftChain.length);
+      const isDense = maxCount > 9;
+      const pillStyle = isDense ? 'min-height: 24px; padding: 2px 10px;' : 'min-height: 31px; padding: 4px 12px;';
+      const textClass = isDense
+        ? 'font-arabic font-bold text-[13px] leading-[1.2] text-[#1c1917] text-center'
+        : 'font-arabic font-bold text-[14.5px] leading-[1.2] text-[#1c1917] text-center';
+
       rightCol.innerHTML = appState.rightChain.map(name => `
-        <div class="sanad-pill">
-          <span dir="rtl" class="font-arabic font-bold text-[14.5px] leading-[1.2] text-[#1c1917] text-center">${escapeHtml(name)}</span>
+        <div class="sanad-pill" style="${pillStyle}">
+          <span dir="rtl" class="${textClass}">${escapeHtml(name)}</span>
         </div>
       `).join('');
 
       leftCol.innerHTML = appState.leftChain.map(name => `
-        <div class="sanad-pill">
-          <span dir="rtl" class="font-arabic font-bold text-[14.5px] leading-[1.2] text-[#1c1917] text-center">${escapeHtml(name)}</span>
+        <div class="sanad-pill" style="${pillStyle}">
+          <span dir="rtl" class="${textClass}">${escapeHtml(name)}</span>
         </div>
       `).join('');
 
       renderChainEditor('right', 'editor-right-chain', appState.rightChain);
       renderChainEditor('left', 'editor-left-chain', appState.leftChain);
 
-      requestAnimationFrame(() => drawSanadConnectors());
+      requestAnimationFrame(drawSanadConnectors);
     }
 
     function renderChainEditor(side, containerId, items) {
@@ -1210,8 +1226,10 @@
       document.getElementById('input-author-name').value = appState.authorName;
       document.getElementById('input-recipient-name').value = appState.recipientName;
       document.getElementById('input-recipient-sub').value = appState.recipientSub || "";
-      document.getElementById('chk-show-photo').checked = appState.showPhoto;
-      document.getElementById('chk-show-third-sig').checked = appState.showThirdSig;
+      const chkShowPhoto = document.getElementById('chk-show-photo');
+      if (chkShowPhoto) chkShowPhoto.checked = appState.showPhoto;
+      const chkShowThirdSig = document.getElementById('chk-show-third-sig');
+      if (chkShowThirdSig) chkShowThirdSig.checked = appState.showThirdSig;
       document.getElementById('input-issue-date').value = appState.issueDateText;
 
       document.getElementById('input-sig-left-title').value = appState.sigLeftTitle;
